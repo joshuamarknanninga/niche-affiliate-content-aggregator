@@ -1,26 +1,20 @@
+// src/pages/HomePage.jsx
 import { useEffect, useState } from 'react';
-import ProductCard from '../components/ProductCard';
-import CategoryFilter from '../components/CategoryFilter';
+import ProductList from '../components/ProductList';
 
-export default function HomePage() {
+const HomePage = ({ selectedCategory }) => {
+  // Move ALL useState hooks INSIDE the component
+  const [searchTerm, setSearchTerm] = useState(''); // <-- Fix here
   const [products, setProducts] = useState([]);
-  const [category, setCategory] = useState('all');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  // Get unique categories from products
-  const categories = [...new Set(products.map(p => p.category))];
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const endpoint = category === 'all' 
-          ? '/api/products' 
-          : `/api/products/${category}`;
-        
-        const response = await fetch(`http://localhost:5000${endpoint}`);
+        // Also fix port to 5000 (matches backend)
+        const response = await fetch('http://localhost:5001/api/products');
         if (!response.ok) throw new Error('Failed to fetch');
-        
         const data = await response.json();
         setProducts(data.products);
       } catch (err) {
@@ -31,25 +25,12 @@ export default function HomePage() {
     };
 
     fetchProducts();
-  }, [category]);
+  }, [selectedCategory]);
 
   if (loading) return <div className="loading">Loading products...</div>;
   if (error) return <div className="error">Error: {error}</div>;
 
-  return (
-    <main>
-      <h1>Best Deals in Tech & Fitness</h1>
-      <CategoryFilter 
-        categories={categories}
-        currentCategory={category}
-        setCategory={setCategory}
-      />
-      
-      <div className="product-grid">
-        {products.map(product => (
-          <ProductCard key={product.id} product={product} />
-        ))}
-      </div>
-    </main>
-  );
-}
+  return <ProductList products={products} />;
+};
+
+export default HomePage;
