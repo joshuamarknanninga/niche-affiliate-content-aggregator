@@ -7,7 +7,7 @@ import "./App.css";
 
 function App() {
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const categories = ['programming', 'fitness', 'books']; // Add your actual categories
+  const categories = ['programming', 'fitness', 'books', `art`]; // Add your actual categories
 
   return (
     <div className="app">

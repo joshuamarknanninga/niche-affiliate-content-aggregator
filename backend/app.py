@@ -7,7 +7,7 @@ from flask_limiter.util import get_remote_address
 
 # Initialize Flask app
 app = Flask(__name__)
-CORS(app)  # Enable CORS for development
+CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 # Rate limiting setup
 limiter = Limiter(
@@ -165,4 +165,4 @@ def get_analytics():
 
 if __name__ == '__main__':
     init_db()  # Ensure tables exist
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5001, debug=True)
